@@ -1,0 +1,14 @@
+{
+  "name": "memory-card-game",
+  "version": "1.0.0",
+  "description": "MERN Stack Memory Card Game",
+  "scripts": {
+    "server": "cd server && node server.js",
+    "client": "cd client && react-scripts start",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
