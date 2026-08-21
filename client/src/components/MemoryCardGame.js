@@ -211,7 +211,7 @@ const MemoryCardGame = ({ onNewGame }) => {
 
   const fetchLeaderboard = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/scores?difficulty=${difficulty}&limit=10`);
+      const response = await fetch(`/api/scores?difficulty=${difficulty}&limit=10`);
       if (response.ok) {
         const data = await response.json();
         setLeaderboard(data);
@@ -323,7 +323,7 @@ const MemoryCardGame = ({ onNewGame }) => {
     soundEffects.scoreSaved();
 
     try {
-      const response = await fetch('http://localhost:5000/api/scores', {
+      const response = await fetch('/api/scores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

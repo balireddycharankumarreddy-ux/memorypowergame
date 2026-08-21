@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -42,7 +43,7 @@ async function initDB() {
   }
 }
 
-// Routes
+// API Routes
 
 // Get top scores
 app.get('/api/scores', async (req, res) => {
@@ -114,9 +115,31 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Start server
-app.listen(PORT, async () => {
+// Serve React app in production
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the React build
+  app.use(express.static(path.join(__dirname, '../client/build')));
+
+  // Handle React routing - serve index.html for all non-API routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  });
+}
+
+// Initialize DB
+(async () => {
   await initDB();
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`   Storage: ${useInMemory ? 'In-Memory' : 'MongoDB'}`);
-});
+})();
+
+// Start server (only when run directly, not imported by Vercel)
+if (require.main === module) {
+  app.listen(PORT, async () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`   Storage: ${useInMemory ? 'In-Memory' : 'MongoDB'}`);
+    if (process.env.NODE_ENV === 'production') {
+      console.log('   Serving React build from /client/build');
+    }
+  });
+}
+
+module.exports = app;
